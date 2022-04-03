@@ -43,4 +43,14 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
+
+    void OnTriggerEnter()
+    {
+        print("I'm the player and I've just Entered a Trigger!");
+    }
+
+    void OnTriggerExit()
+    {
+        print("I'm the player and I've just Exited a Trigger!");
+    }
 }

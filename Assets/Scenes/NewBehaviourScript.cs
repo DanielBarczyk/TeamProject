@@ -21,12 +21,12 @@ public class NewBehaviourScript : MonoBehaviour
 
         float mouseXvalue =Input.GetAxis("Mouse X");
         float mouseYvalue =Input.GetAxis("Mouse Y");
-        transform.Rotate(-1*mouseYvalue,mouseXvalue,0);
+        //transform.Rotate(-1*mouseYvalue,mouseXvalue,0);
+        
+        Rigidbody rb=GetComponent<Rigidbody>();
 
+        Quaternion deltaRotation = Quaternion.Euler(new Vector3(-1*mouseYvalue,mouseXvalue,0));
+        rb.MoveRotation(rb.rotation*deltaRotation);
     }
 
-    void onCollisionEnter(Collision collision){
-        this.gameObject.GetComponent<Rigidbody>().angularVelocity=Vector3.zero;
-        print("collided");
-    }
 }

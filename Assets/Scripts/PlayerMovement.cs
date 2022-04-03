@@ -50,4 +50,14 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Reloaded\n");
         }
     }
+
+    void OnTriggerEnter()
+    {
+        print("I'm the player and I've just Entered a Trigger!");
+    }
+
+    void OnTriggerExit()
+    {
+        print("I'm the player and I've just Exited a Trigger!");
+    }
 }

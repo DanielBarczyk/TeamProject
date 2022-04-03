@@ -8,6 +8,9 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100.0f;
     public Transform playerBody;
     private float xRotation = 0.0f;
+    private RaycastHit raycastHit;
+    private Ray ray;
+    public float rayDistance = 4.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -26,5 +29,8 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0.0f, 0.0f);
         playerBody.Rotate(Vector3.up * mouseX);
+
+        ray = new Ray(transform.position, transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.red);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NewBehaviourScript : MonoBehaviour
 {
@@ -14,27 +15,27 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Rigidbody rb=GetComponent<Rigidbody>();
         
-        float distanceX = 10 * Time.deltaTime * Input.GetAxis("Horizontal");
+        float distanceX = 10*Time.deltaTime * Input.GetAxis("Horizontal");
         transform.Translate(Vector3.right * distanceX);
         
-        float distanceY = 10 * Time.deltaTime * Input.GetAxis("Vertical");
+        float distanceY = 10*Time.deltaTime * Input.GetAxis("Vertical");
         transform.Translate(Vector3.forward * distanceY);
 
         float mouseXvalue =Input.GetAxis("Mouse X");
         float mouseYvalue =Input.GetAxis("Mouse Y");
-        Quaternion deltaRotation = Quaternion.Euler(new Vector3(0,mouseXvalue,0));
-        rb.MoveRotation(rb.rotation*deltaRotation);
+        //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0,mouseXvalue,0));
+        //rb.MoveRotation(rb.rotation*deltaRotation);
+        transform.Rotate(0,mouseXvalue,0,Space.World);
 
         if(Input.GetKey("space")){
             if(isJumping==false){
                 isJumping=true;
-                rb.AddForce(new Vector3(0,100,0));
+                //rb.AddForce(new Vector3(0,100,0));
             }
         }
-        if(rb.velocity.y==0){
-            isJumping=false;
+        if(Input.GetKey("r")){
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

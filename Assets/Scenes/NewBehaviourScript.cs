@@ -13,6 +13,8 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Rigidbody rb=GetComponent<Rigidbody>();
+        
         float distanceX = 10 * Time.deltaTime * Input.GetAxis("Horizontal");
         transform.Translate(Vector3.right * distanceX);
         
@@ -21,10 +23,6 @@ public class NewBehaviourScript : MonoBehaviour
 
         float mouseXvalue =Input.GetAxis("Mouse X");
         float mouseYvalue =Input.GetAxis("Mouse Y");
-        //transform.Rotate(-1*mouseYvalue,mouseXvalue,0);
-        
-        Rigidbody rb=GetComponent<Rigidbody>();
-
         Quaternion deltaRotation = Quaternion.Euler(new Vector3(-1*mouseYvalue,mouseXvalue,0));
         rb.MoveRotation(rb.rotation*deltaRotation);
     }

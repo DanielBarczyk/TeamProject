@@ -7,13 +7,8 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     bool visible;
-    // Start is called before the first frame update
-    void Start()
-    {
-        visible=false;
-    }
+    int cubecount=0;
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKey("i")){
@@ -21,9 +16,9 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    void onTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        
-
+        Debug.Log("Collected");
+        cubecount++;
     }
 }

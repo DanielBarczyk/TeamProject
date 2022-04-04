@@ -6,13 +6,23 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    public GameObject cubeCount;
+    public GameObject inventoryScreen;
     bool visible;
-    int cubecount=0;
+    int cubecount;
 
+
+    void Start(){
+        visible=false;
+        inventoryScreen.SetActive(false);
+        cubeCount.GetComponent<Text>().text="Cubes Collected:0";
+        cubecount=0;
+    }
     void Update()
     {
-        if(Input.GetKey("i")){
+        if(Input.GetKeyDown("i")){
             visible=!visible;
+            inventoryScreen.SetActive(visible);
         }
     }
 
@@ -20,5 +30,6 @@ public class Inventory : MonoBehaviour
     {
         Debug.Log("Collected");
         cubecount++;
+        cubeCount.GetComponent<Text>().text="Cubes Collected:"+cubecount.ToString();
     }
 }

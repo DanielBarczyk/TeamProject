@@ -51,13 +51,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter()
-    {
-        print("I'm the player and I've just Entered a Trigger!");
-    }
-
-    void OnTriggerExit()
-    {
-        print("I'm the player and I've just Exited a Trigger!");
-    }
 }

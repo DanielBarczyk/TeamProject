@@ -6,63 +6,29 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-
-    public class Weapon
-    {
-        public string name;
-        public int atk;
-        public int shotDelay;
-        public Weapon()
-        {
-            name="Starting Weapon";
-            atk=1;
-            shotDelay=120;
-        }
-        public Weapon(string name,int atk, int shotDelay)
-        {
-            this.name=name;
-            this.atk=atk;
-            this.shotDelay=shotDelay;
-        }
-    }
-
-    public class Item
-    {
-        public string name;
-        public Item()
-        {
-            name="New Item";
-        }
-        public Item(string name)
-        {
-            this.name=name;
-        }
-    }
-
     public GameObject inventoryScreen;
 
     public GameObject currentWeapon;
 
-    public GameObject allWeapons;
+    public bool visible;
 
-    public GameObject inventoryItems;
-
-    bool visible;
-    int cubecount;
-
-    List<Weapon> weapons;
-    List<Item> items;
-    public Weapon equippedWeapon;
-
+    int itemCount;
+    int weaponCount;
+    
+    public string equippedName;
+    public int equippedAtk;
+    public int equippedDelay;
     void Start(){
         visible=false;
         inventoryScreen.SetActive(false);
-        equippedWeapon=new Weapon();
-        weapons=new List<Weapon>();
-        weapons.Add(equippedWeapon);
+        equippedName="Starting Weapon";
+        equippedAtk=1;
+        equippedDelay=120;
+        weaponCount=0;
+        AddWeapon("Starting Weapon",1,120);
         AddWeapon("Strong and Slow",10,420);
-        items=new List<Item>();
-        UpdateItems();
+        UpdateWeapons();
+        itemCount=0;
     }
     void Update()
     {
@@ -70,57 +36,73 @@ public class Inventory : MonoBehaviour
             visible=!visible;
             inventoryScreen.SetActive(visible);
         }
-        if(inventoryScreen.activeSelf==true)
-        {
-            for(int i=1;i<10;i++)
-            {
-                if(Input.GetKeyDown(i.ToString()))
-                {
-                    ChangeWeapons(i);
-                }
-            }
-        }
-    }
-    void AddWeapon(string name, int atk, int delay){
-        if(weapons.Count<9)
-            weapons.Add(new Weapon(name,atk,delay));
-        UpdateWeapons();
-    }
-    void UpdateWeapons()
-    {
-        currentWeapon.GetComponent<Text>().text="Current Weapon:\n"+equippedWeapon.name+"\nAttack: "+equippedWeapon.atk+"\ndelay: "+equippedWeapon.shotDelay;
-        allWeapons.GetComponent<Text>().text="All Weapons: "+weapons.Count+"/9\n";
-        foreach(var val in weapons)
-        {
-            allWeapons.GetComponent<Text>().text+=val.name+"\nAttack: "+val.atk+"\ndelay: "+val.shotDelay+"\n\n";
-        }
-    }
-    void ChangeWeapons(int arg)
-    {
-        if(arg<=weapons.Count&&arg>0)
-        {
-            equippedWeapon=weapons[arg-1];
-            UpdateWeapons();
-        }
     }
 
-    public bool AddItem(string name)
-    {
-        if(items.Count<40)
+    [SerializeField] Transform itemPanel;
+    [SerializeField] Transform weaponPanel;
+    [SerializeField] GameObject buttonPrefab;
+    [SerializeField] GameObject itemPrefab;
+    [SerializeField] GameObject weaponPrefab;
+
+    public bool AddWeapon(string name, int atk, int delay){
+        if(weaponCount<8)
         {
-            items.Add(new Item(name));
-            UpdateItems();
+            weaponCount++;
+            GameObject button = (GameObject)Instantiate(buttonPrefab); 
+            button.GetComponentInChildren<Text>().text=name+"\nAttack: "+atk+"\ndelay: "+delay;
+            button.transform.SetParent(weaponPanel.transform,false);
+            button.GetComponent<Button>().onClick.AddListener(
+                () => {ChangeWeapons(button,name, atk, delay);}
+            );
             return true;
         }
         return false;
     }
-
-    void UpdateItems()
+    void UpdateWeapons()
     {
-        inventoryItems.GetComponent<Text>().text="Current Items:\n";
-        foreach(var val in items)
+        currentWeapon.GetComponent<Text>().text="Current Weapon:\n"+equippedName+"\nAttack: "+equippedAtk+"\ndelay: "+equippedDelay;
+    }
+    void ChangeWeapons(GameObject button, string name, int atk, int delay)
+    {
+        if(Input.GetKey(KeyCode.LeftShift))
         {
-            inventoryItems.GetComponent<Text>().text+=val.name+"\n";
+            Destroy(button);
+            GameObject weapon = (GameObject)Instantiate(weaponPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
+            weapon.name=name;
+            weapon.GetComponent<Weapon>().name=name;
+            weapon.GetComponent<Weapon>().atk=atk;
+            weapon.GetComponent<Weapon>().delay=delay;
+        }
+        else
+        {
+            equippedName=name;
+            equippedAtk=atk;
+            equippedDelay=delay;
+            UpdateWeapons();
         }
     }
+    public bool AddItem(string name)
+    {
+        if(itemCount<30)
+        {
+            itemCount++;
+            GameObject button = (GameObject)Instantiate(buttonPrefab); 
+            button.GetComponentInChildren<Text>().text=name;
+            button.transform.SetParent(itemPanel.transform,false);
+            button.GetComponent<Button>().onClick.AddListener(
+                () => {removeButton(button,name);}
+            );
+            return true;
+        }
+        return false;
+    }
+    void removeButton(GameObject button,string name){
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            Destroy(button);
+            GameObject item = (GameObject)Instantiate(itemPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
+            item.name=name;
+        }
+    }
+
 }

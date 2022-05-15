@@ -15,52 +15,65 @@ public class PlayerShoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray ray=this.gameObject.GetComponent<MouseLook>().ray;
-        float rayDistance=this.gameObject.GetComponent<MouseLook>().rayDistance;
-
-        bool isSomethingInRange;
-        RaycastHit hit;
-        isSomethingInRange=Physics.Raycast(ray.origin,ray.direction,out hit,rayDistance);
-        if(Input.GetMouseButtonDown(0))
+        if(!this.gameObject.GetComponentInParent<Inventory>().visible)
         {
-            if(currentDelay==0)
+            Ray ray=this.gameObject.GetComponent<MouseLook>().ray;
+            float rayDistance=this.gameObject.GetComponent<MouseLook>().rayDistance;
+
+            bool isSomethingInRange;
+            RaycastHit hit;
+            isSomethingInRange=Physics.Raycast(ray.origin,ray.direction,out hit,rayDistance);
+            if(Input.GetMouseButtonDown(0))
             {
-                if(isSomethingInRange)
+                if(currentDelay==0)
                 {
-                    Collider looking_at=hit.collider;
-                    if(looking_at.tag=="Enemy")
+                    if(isSomethingInRange)
                     {
-                        looking_at.GetComponent<Enemy>().ShootAt(this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.atk);
-                        isSomethingInRange=false;
+                        Collider looking_at=hit.collider;
+                        if(looking_at.tag=="Enemy")
+                        {
+                            looking_at.GetComponent<Enemy>().ShootAt(this.gameObject.GetComponentInParent<Inventory>().equippedAtk);
+                            isSomethingInRange=false;
+                        }
+                    }
+                    currentDelay=this.gameObject.GetComponentInParent<Inventory>().equippedDelay;
+                }
+                else
+                {
+                    Debug.Log("Cooling down\n");
+                }
+            }
+            if(currentDelay>0){
+                currentDelay--;
+            }
+
+            
+            if(isSomethingInRange)
+            {
+                Collider looking_at=hit.collider;
+                if(looking_at.tag=="Item")
+                {
+                    prompts.SetActive(true);
+                    if(Input.GetKeyDown("e"))
+                    {
+                        looking_at.GetComponent<Item>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
+                        prompts.SetActive(false);
                     }
                 }
-                currentDelay=this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.shotDelay;
-            }
-            else
-            {
-                Debug.Log("Cooling down\n");
-            }
-        }
-        if(currentDelay>0){
-            currentDelay--;
-        }
-
-        
-        if(isSomethingInRange)
-        {
-            Collider looking_at=hit.collider;
-            if(looking_at.tag=="Item")
-            {
-                prompts.SetActive(true);
-                if(Input.GetKeyDown("e"))
+                if(looking_at.tag=="Weapon")
                 {
-                    looking_at.GetComponent<Item>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
-                prompts.SetActive(false);
+                    prompts.SetActive(true);
+                    if(Input.GetKeyDown("e"))
+                    {
+                        looking_at.GetComponent<Weapon>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
+                        prompts.SetActive(false);
+                    }
                 }
+                if(looking_at.tag!="Weapon"&&looking_at.tag!="Item")
+                    prompts.SetActive(false);
             }
-        }
             else
                 prompts.SetActive(false);
-
+        }
     }
 }

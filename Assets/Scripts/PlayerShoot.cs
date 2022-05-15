@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public int playerAttack=1;
-
+    int currentDelay;
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentDelay=0;
     }
 
     // Update is called once per frame
@@ -19,19 +18,28 @@ public class PlayerShoot : MonoBehaviour
         float rayDistance=this.gameObject.GetComponent<MouseLook>().rayDistance;
 
         RaycastHit hit;
-        if(Physics.Raycast(ray.origin,ray.direction,out hit,rayDistance))
+        if(Input.GetMouseButtonDown(0))
         {
-            Collider looking_at=hit.collider;
-            if(looking_at.tag=="Enemy")
+            if(currentDelay==0)
             {
-                //Debug.Log("Lookin' at an enemy\n");
-                if(Input.GetMouseButtonDown(0))
+                if(Physics.Raycast(ray.origin,ray.direction,out hit,rayDistance))
                 {
-                    looking_at.GetComponent<Enemy>().ShootAt(playerAttack);
+                    Collider looking_at=hit.collider;
+                    if(looking_at.tag=="Enemy")
+                    {
+                    //Debug.Log("Lookin' at an enemy\n");
+                        looking_at.GetComponent<Enemy>().ShootAt(this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.atk);
+                    }
                 }
+                currentDelay=this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.shotDelay;
             }
-
+            else
+            {
+                Debug.Log("Cooling down\n");
+            }
         }
-        
+        if(currentDelay>0){
+            currentDelay--;
+        }
     }
 }

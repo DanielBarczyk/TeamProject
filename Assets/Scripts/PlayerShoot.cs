@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayetShoot : MonoBehaviour
+public class PlayerShoot : MonoBehaviour
 {
     public int playerAttack=1;
 

@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,8 +8,7 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100.0f;
     public Transform playerBody;
     private float xRotation = 0.0f;
-    private RaycastHit raycastHit;
-    private Ray ray;
+    public Ray ray;
     public float rayDistance = 4.0f;
 
     // Start is called before the first frame update

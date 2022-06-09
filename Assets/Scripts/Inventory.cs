@@ -15,18 +15,14 @@ public class Inventory : MonoBehaviour
     int itemCount;
     int weaponCount;
     
-    public string equippedName;
-    public int equippedAtk;
-    public int equippedDelay;
+    public Weapon equippedWeapon;
     void Start(){
         visible=false;
         inventoryScreen.SetActive(false);
-        equippedName="Starting Weapon";
-        equippedAtk=1;
-        equippedDelay=120;
+        equippedWeapon=new Weapon();
         weaponCount=0;
-        AddWeapon("Starting Weapon",1,120);
-        AddWeapon("Strong and Slow",10,420);
+        AddWeapon(new Weapon());
+        AddWeapon(new Weapon("Strong and Slow",10,420,4.0f));
         UpdateWeapons();
         itemCount=0;
     }
@@ -44,15 +40,15 @@ public class Inventory : MonoBehaviour
     [SerializeField] GameObject itemPrefab;
     [SerializeField] GameObject weaponPrefab;
 
-    public bool AddWeapon(string name, int atk, int delay){
+    public bool AddWeapon(Weapon weapon){
         if(weaponCount<8)
         {
             weaponCount++;
             GameObject button = (GameObject)Instantiate(buttonPrefab); 
-            button.GetComponentInChildren<Text>().text=name+"\nAttack: "+atk+"\ndelay: "+delay;
+            button.GetComponentInChildren<Text>().text=weapon.name+"\nAttack: "+weapon.atk+"\ndelay: "+weapon.delay;
             button.transform.SetParent(weaponPanel.transform,false);
             button.GetComponent<Button>().onClick.AddListener(
-                () => {ChangeWeapons(button,name, atk, delay);}
+                () => {ChangeWeapons(button,weapon);}
             );
             return true;
         }
@@ -60,30 +56,26 @@ public class Inventory : MonoBehaviour
     }
     void UpdateWeapons()
     {
-        currentWeapon.GetComponent<Text>().text="Current Weapon:\n"+equippedName+"\nAttack: "+equippedAtk+"\ndelay: "+equippedDelay;
+        currentWeapon.GetComponent<Text>().text="Current Weapon:\n"+equippedWeapon.name+"\nAttack: "+equippedWeapon.atk+"\ndelay: "+equippedWeapon.delay;
     }
-    void ChangeWeapons(GameObject button, string name, int atk, int delay)
+    void ChangeWeapons(GameObject button, Weapon weapon)
     {
         if(Input.GetKey(KeyCode.LeftShift))
         {
             Destroy(button);
-            GameObject weapon = (GameObject)Instantiate(weaponPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
-            weapon.name=name;
-            weapon.GetComponent<Weapon>().name=name;
-            weapon.GetComponent<Weapon>().atk=atk;
-            weapon.GetComponent<Weapon>().delay=delay;
+            GameObject weapondrop = (GameObject)Instantiate(weaponPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
+            weapondrop.name=name;
+            weapondrop.GetComponent<WeaponBehaviour>().weapon=weapon;
         }
         else
         {
-            equippedName=name;
-            equippedAtk=atk;
-            equippedDelay=delay;
+            equippedWeapon=weapon;
             UpdateWeapons();
         }
     }
     public bool AddItem(string name)
     {
-        if(itemCount<30)
+        if(itemCount<24)
         {
             itemCount++;
             GameObject button = (GameObject)Instantiate(buttonPrefab); 

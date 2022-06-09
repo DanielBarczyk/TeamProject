@@ -1,42 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class Weapon : MonoBehaviour
+
+
+public class Weapon
 {
-    // Start is called before the first frame update
-  
-    public string name;  
+    public string name;
     public int atk;
     public int delay;
-    // Start is called before the first frame update
-    
+    public float range;
+
     public Weapon()
     {
         name="Starting Weapon";
         atk=1;
         delay=120;
+        range=4.0f;
     }
-    public Weapon(string name,int atk, int delay)
+
+    public Weapon(string name,int atk, int delay,float range)
     {
         this.name=name;
         this.atk=atk;
         this.delay=delay;
-    }
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void PickUp(Inventory inventory)
-    {
-        if(inventory.AddWeapon(name,atk,delay))
-        Destroy(this.gameObject);
+        this.range=range;
     }
 }

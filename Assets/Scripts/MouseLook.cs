@@ -34,6 +34,7 @@ public class MouseLook : MonoBehaviour
 
             ray = new Ray(transform.position, transform.forward);
             Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.red);
+            
         }
         else
         {

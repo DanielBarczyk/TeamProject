@@ -18,25 +18,24 @@ public class PlayerShoot : MonoBehaviour
         if(!this.gameObject.GetComponentInParent<Inventory>().visible)
         {
             Ray ray=this.gameObject.GetComponent<MouseLook>().ray;
-            float rayDistance=this.gameObject.GetComponent<MouseLook>().rayDistance;
 
-            bool isSomethingInRange;
+            bool isEnemyInRange;
             RaycastHit hit;
-            isSomethingInRange=Physics.Raycast(ray.origin,ray.direction,out hit,rayDistance);
+            isEnemyInRange=Physics.Raycast(ray.origin,ray.direction,out hit,this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.range);
             if(Input.GetMouseButtonDown(0))
             {
                 if(currentDelay==0)
                 {
-                    if(isSomethingInRange)
+                    if(isEnemyInRange)
                     {
                         Collider looking_at=hit.collider;
                         if(looking_at.tag=="Enemy")
                         {
-                            looking_at.GetComponent<Enemy>().ShootAt(this.gameObject.GetComponentInParent<Inventory>().equippedAtk);
-                            isSomethingInRange=false;
+                            looking_at.GetComponent<Enemy>().ShootAt(this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.atk);
+                            isEnemyInRange=false;
                         }
                     }
-                    currentDelay=this.gameObject.GetComponentInParent<Inventory>().equippedDelay;
+                    currentDelay=this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.delay;
                 }
                 else
                 {
@@ -47,6 +46,7 @@ public class PlayerShoot : MonoBehaviour
                 currentDelay--;
             }
 
+            bool isSomethingInRange=Physics.Raycast(ray.origin,ray.direction,out hit,this.gameObject.GetComponent<MouseLook>().rayDistance);
             
             if(isSomethingInRange)
             {
@@ -65,7 +65,7 @@ public class PlayerShoot : MonoBehaviour
                     prompts.SetActive(true);
                     if(Input.GetKeyDown("e"))
                     {
-                        looking_at.GetComponent<Weapon>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
+                        looking_at.GetComponent<WeaponBehaviour>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
                         prompts.SetActive(false);
                     }
                 }

@@ -19,7 +19,7 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!this.gameObject.GetComponentInParent<Inventory>().visible)
+        if(!this.gameObject.GetComponentInParent<Inventory>().visible&&!this.gameObject.GetComponentInParent<PlayerHealth>().gameOverText.activeInHierarchy)
         {
             Cursor.visible=false;
             

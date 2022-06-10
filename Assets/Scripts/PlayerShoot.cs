@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public GameObject prompts;
+    public GameObject PickUp;
+    public GameObject ReloadingText;
     int currentDelay;
     // Start is called before the first frame update
     void Start()
     {
         currentDelay=0;
+        ReloadingText.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!this.gameObject.GetComponentInParent<Inventory>().visible)
+        if(!this.gameObject.GetComponentInParent<Inventory>().visible&&!this.gameObject.GetComponentInParent<PlayerHealth>().gameOverText.activeInHierarchy)
         {
             Ray ray=this.gameObject.GetComponent<MouseLook>().ray;
 
@@ -36,6 +38,7 @@ public class PlayerShoot : MonoBehaviour
                         }
                     }
                     currentDelay=this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.delay;
+                    ReloadingText.SetActive(true);
                 }
                 else
                 {
@@ -44,6 +47,8 @@ public class PlayerShoot : MonoBehaviour
             }
             if(currentDelay>0){
                 currentDelay--;
+                if(currentDelay==0)
+                    ReloadingText.SetActive(false);
             }
 
             bool isSomethingInRange=Physics.Raycast(ray.origin,ray.direction,out hit,this.gameObject.GetComponent<MouseLook>().rayDistance);
@@ -53,27 +58,27 @@ public class PlayerShoot : MonoBehaviour
                 Collider looking_at=hit.collider;
                 if(looking_at.tag=="Item")
                 {
-                    prompts.SetActive(true);
+                    PickUp.SetActive(true);
                     if(Input.GetKeyDown("e"))
                     {
                         looking_at.GetComponent<Item>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
-                        prompts.SetActive(false);
+                        PickUp.SetActive(false);
                     }
                 }
                 if(looking_at.tag=="Weapon")
                 {
-                    prompts.SetActive(true);
+                    PickUp.SetActive(true);
                     if(Input.GetKeyDown("e"))
                     {
                         looking_at.GetComponent<WeaponBehaviour>().PickUp(this.gameObject.GetComponentInParent<Inventory>());
-                        prompts.SetActive(false);
+                        PickUp.SetActive(false);
                     }
                 }
                 if(looking_at.tag!="Weapon"&&looking_at.tag!="Item")
-                    prompts.SetActive(false);
+                    PickUp.SetActive(false);
             }
             else
-                prompts.SetActive(false);
+                PickUp.SetActive(false);
         }
     }
 }

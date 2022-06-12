@@ -22,7 +22,7 @@ public class Inventory : MonoBehaviour
         equippedWeapon=new Weapon();
         weaponCount=0;
         AddWeapon(new Weapon());
-        AddWeapon(new Weapon("Shotgun",10,420,4.0f));
+        AddWeapon(new Weapon("Shotgun",10,420,10));
         UpdateWeapons();
         itemCount=0;
     }

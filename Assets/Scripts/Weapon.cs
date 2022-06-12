@@ -14,7 +14,7 @@ public class Weapon : MonoBehaviour
         name="Starting Weapon";
         atk=1;
         delay=120;
-        range=4.0f;
+        range=10.0f;
     }
 
     public Weapon(string name,int atk, int delay,float range)

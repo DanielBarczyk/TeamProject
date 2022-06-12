@@ -24,7 +24,7 @@ public class WeaponGeneration : MonoBehaviour
         GameObject generatedWeapon = Instantiate(standardGunPrefab, position, rotation);
         generatedWeapon.GetComponent<WeaponBehaviour>().weapon = generatedWeapon.GetComponent<Weapon>();
         generatedWeapon.GetComponent<Weapon>().name = "Standard Gun";
-        generatedWeapon.GetComponent<Weapon>().range = 4.0f;
+        generatedWeapon.GetComponent<Weapon>().range = 20.0f;
 
         float ran = UnityEngine.Random.value * 4 + 1;
         generatedWeapon.GetComponent<Weapon>().atk = Mathf.FloorToInt(ran);
@@ -41,7 +41,7 @@ public class WeaponGeneration : MonoBehaviour
         generatedWeapon.GetComponent<WeaponBehaviour>().weapon = generatedWeapon.GetComponent<Weapon>();
         
         generatedWeapon.GetComponent<Weapon>().name = "Shotgun";
-        generatedWeapon.GetComponent<Weapon>().range = 4.0f;
+        generatedWeapon.GetComponent<Weapon>().range = 20.0f;
         
         float ran = UnityEngine.Random.value * 10 + 5;
         generatedWeapon.GetComponent<Weapon>().atk = Mathf.FloorToInt(ran);
@@ -59,7 +59,7 @@ public class WeaponGeneration : MonoBehaviour
         generatedWeapon.GetComponent<WeaponBehaviour>().weapon = generatedWeapon.GetComponent<Weapon>();
         
         generatedWeapon.GetComponent<Weapon>().name = "Sniper Rifle";
-        generatedWeapon.GetComponent<Weapon>().range = 30.0f;
+        generatedWeapon.GetComponent<Weapon>().range = 120.0f;
         
         float ran = UnityEngine.Random.value * 5 + 3;
         generatedWeapon.GetComponent<Weapon>().atk = Mathf.FloorToInt(ran);

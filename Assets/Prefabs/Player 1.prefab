@@ -633,7 +633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 7693581819872791435}
-  movementSpeed: 5
+  movementSpeed: 40
   jumpHeight: 3
   gravity: -19.62
   groundCheck: {fileID: 7693581819864715869}

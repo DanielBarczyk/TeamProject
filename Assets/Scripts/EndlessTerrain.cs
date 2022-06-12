@@ -202,7 +202,7 @@ public class EndlessTerrain : MonoBehaviour
                 randomOffset.z += position.y;
                 GameObject weapon = weaponGeneration.generateWeapon(randomOffset * scale, Quaternion.identity);
                 weapon.transform.parent = meshObject.transform;
-                weapon.transform.localScale = Vector3.one * scale / 5;
+                weapon.transform.localScale = Vector3.one / 5;
                 weaponObjects.Add(weapon);
             }
         }

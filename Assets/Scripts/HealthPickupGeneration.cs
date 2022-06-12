@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeatlhPickupGeneration : MonoBehaviour
+public class HealthPickupGeneration : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] GameObject healthPickingPrefab;

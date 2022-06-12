@@ -34,17 +34,16 @@ public class EnemyGeneration : MonoBehaviour
 
     void randomizeEnemyStats(GameObject generatedEnemy, int modifier)
     {
-        float ran=UnityEngine.Random.value;
-        ran*=10;
-        generatedEnemy.GetComponent<Enemy>().hp=Mathf.FloorToInt(ran*modifier);
-        ran=UnityEngine.Random.value;
-        ran*=3;
-        generatedEnemy.GetComponent<Enemy>().defense=Mathf.FloorToInt(ran*modifier);
-        ran=UnityEngine.Random.value;
-        ran*=40;
-        generatedEnemy.GetComponent<Enemy>().atk=Mathf.FloorToInt(ran);
-        ran=UnityEngine.Random.value;
-        ran*=0.5f;
-        generatedEnemy.GetComponent<Enemy>().movementspeed=Mathf.FloorToInt(ran);
+        float ran = UnityEngine.Random.value * 10;
+        generatedEnemy.GetComponent<Enemy>().hp = Mathf.FloorToInt(ran * modifier + 1);
+        
+        ran=UnityEngine.Random.value * 3;
+        generatedEnemy.GetComponent<Enemy>().defense = Mathf.FloorToInt(ran*modifier);
+        
+        ran = UnityEngine.Random.value * 40;
+        generatedEnemy.GetComponent<Enemy>().atk = Mathf.FloorToInt(ran);
+
+        ran = UnityEngine.Random.value * 0.5f;
+        generatedEnemy.GetComponent<Enemy>().movementspeed = Mathf.FloorToInt(ran * 3);
     }
 }

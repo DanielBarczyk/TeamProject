@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 2162348231552769268}
   - component: {fileID: 8079269315331920167}
   - component: {fileID: 3901876152787588069}
+  - component: {fileID: 8232327164428318078}
+  - component: {fileID: 2647167079018211724}
   m_Layer: 0
   m_Name: sniper
   m_TagString: Weapon
@@ -95,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4a905a6e677114880671d2a57d419b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: {fileID: 0}
 --- !u!65 &3901876152787588069
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -108,3 +111,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 48.446625, y: 2.6, z: 5}
   m_Center: {x: 17.910809, y: 0.022587772, z: 0.19758317}
+--- !u!114 &8232327164428318078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361071040317242657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ef93237b07cd04ea26a68a9605f2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Starting Weapon
+  atk: 1
+  delay: 120
+  range: 4
+--- !u!54 &2647167079018211724
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361071040317242657}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

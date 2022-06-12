@@ -112,7 +112,7 @@ MonoBehaviour:
   hp: 2
   defense: 0
   atk: 20
-  movetype: 1
+  movetype: 2
   movementspeed: 0
 --- !u!54 &-9091042811540268049
 Rigidbody:

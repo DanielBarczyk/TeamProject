@@ -17,7 +17,8 @@ public class EndlessTerrain : MonoBehaviour
     Vector2 viewerPositionOld;
     static MapGenerator mapGenerator;
     static EnemyGeneration enemyGeneration;
-    static WeaponGeneration weaponGeneration;
+    public static WeaponGeneration weaponGeneration;
+    static HealthPickupGeneration healthPickupGeneration;
     int chunkSize;
     int chunksVisibleInViewDistance;
     public Material mapMaterial;
@@ -34,6 +35,7 @@ public class EndlessTerrain : MonoBehaviour
         mapGenerator = FindObjectOfType<MapGenerator>();
         enemyGeneration = FindObjectOfType<EnemyGeneration>();
         weaponGeneration = FindObjectOfType<WeaponGeneration>();
+        healthPickupGeneration = FindObjectOfType<HealthPickupGeneration>();
         UpdateVisibleChunks();
     }
 
@@ -70,11 +72,13 @@ public class EndlessTerrain : MonoBehaviour
 
     public class TerrainChunk {
         GameObject meshObject;
+        GameObject emptyObject;
         GameObject waterObjectInstance;
         GameObject treeObjectBase;
         List<GameObject> treeObjects;
         List<GameObject> enemyObjects;
         List<GameObject> weaponObjects;
+        List<GameObject> itemObjects;
         Vector2 position;
         Bounds bounds;
         int size;
@@ -101,12 +105,16 @@ public class EndlessTerrain : MonoBehaviour
             treeObjects = new List<GameObject>();
             enemyObjects = new List<GameObject>();
             weaponObjects = new List<GameObject>();
+            itemObjects = new List<GameObject>();
             treeObjectBase = treeObject;
 
             meshObject = new GameObject("Terrain Chunk");
             meshRenderer = meshObject.AddComponent<MeshRenderer>();
             meshFilter = meshObject.AddComponent<MeshFilter>();
             meshCollider = meshObject.AddComponent<MeshCollider>();
+
+            emptyObject = new GameObject("Asset Holder");
+            emptyObject.transform.parent = meshObject.transform;
 
             meshRenderer.material = material;
             meshObject.transform.position = positionV3 * scale;
@@ -136,7 +144,7 @@ public class EndlessTerrain : MonoBehaviour
             populateChunk(treeObjects, treeObjectBase);
             generateEnemies();
             generatedWeapons();
-
+            generateItems();
             UpdateTerrainChunk();
         }
 
@@ -158,7 +166,7 @@ public class EndlessTerrain : MonoBehaviour
                     randomOffset.x += position.x;
                     randomOffset.z += position.y;
                     GameObject tree = Instantiate(treeObjectBase, randomOffset * scale, quaternion);
-                    tree.transform.parent = meshObject.transform;
+                    tree.transform.parent = emptyObject.transform;
                     tree.transform.localScale = Vector3.one * scale / 3;
                     treeObjects.Add(tree);
                 } 
@@ -166,7 +174,7 @@ public class EndlessTerrain : MonoBehaviour
         }
 
         void generateEnemies() {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 50; i++) {
                 int randomX = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
                 int randomY = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
                 float height = mapData.heightMap[randomX, randomY];
@@ -176,18 +184,18 @@ public class EndlessTerrain : MonoBehaviour
 
                 Vector3 randomOffset = new Vector3(topLeftX + randomX, 0, topLeftZ - randomY);
                 
-                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 1;
+                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 5;
                 randomOffset.x += position.x;
                 randomOffset.z += position.y;
                 GameObject enemy = enemyGeneration.generateEnemy(randomOffset * scale, Quaternion.identity);
-                enemy.transform.parent = meshObject.transform;
+                enemy.transform.parent = emptyObject.transform;
                 enemy.transform.localScale = Vector3.one * scale / 4;
                 enemyObjects.Add(enemy);
             }
         }
 
         void generatedWeapons() {
-            for (int i = 0; i < 40; i++) {
+            for (int i = 0; i < 30; i++) {
                 int randomX = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
                 int randomY = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
                 float height = mapData.heightMap[randomX, randomY];
@@ -201,9 +209,29 @@ public class EndlessTerrain : MonoBehaviour
                 randomOffset.x += position.x;
                 randomOffset.z += position.y;
                 GameObject weapon = weaponGeneration.generateWeapon(randomOffset * scale, Quaternion.identity);
-                weapon.transform.parent = meshObject.transform;
-                weapon.transform.localScale = Vector3.one / 5;
+                weapon.transform.parent = emptyObject.transform;
                 weaponObjects.Add(weapon);
+            }
+        }
+
+        void generateItems() {
+            for (int i = 0; i < 30; i++) {
+                int randomX = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                int randomY = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                float height = mapData.heightMap[randomX, randomY];
+                
+                float topLeftX = (MapGenerator.mapChunkSize - 1) / -2f;
+		        float topLeftZ = (MapGenerator.mapChunkSize - 1) / 2f;
+
+                Vector3 randomOffset = new Vector3(topLeftX + randomX, 0, topLeftZ - randomY);
+
+                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 1;
+                randomOffset.x += position.x;
+                randomOffset.z += position.y;
+                GameObject item = healthPickupGeneration.generatePickup(randomOffset * scale, Quaternion.identity);
+                
+                item.transform.parent = emptyObject.transform;
+                itemObjects.Add(item);
             }
         }
 
@@ -239,6 +267,12 @@ public class EndlessTerrain : MonoBehaviour
 
                 terrainChunksVisibleLastUpdate.Add(this);
             }
+
+            if(previousLODIndex == 0)
+                emptyObject.SetActive(true);
+            else
+                emptyObject.SetActive(false);
+
 
             SetVisible(visible);
         }

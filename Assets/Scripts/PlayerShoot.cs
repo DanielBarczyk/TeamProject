@@ -23,7 +23,10 @@ public class PlayerShoot : MonoBehaviour
 
             bool isEnemyInRange;
             RaycastHit hit;
-            isEnemyInRange=Physics.Raycast(ray.origin,ray.direction,out hit,this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.range);
+
+            Debug.DrawRay(ray.origin, ray.direction * this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.range, Color.blue);
+
+            isEnemyInRange = Physics.Raycast(ray.origin,ray.direction,out hit,this.gameObject.GetComponentInParent<Inventory>().equippedWeapon.range);
             if(Input.GetMouseButtonDown(0))
             {
                 if(currentDelay==0)

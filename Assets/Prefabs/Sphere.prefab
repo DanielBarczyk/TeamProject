@@ -110,3 +110,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 2
   defense: 0
+  atk: 20
+  movetype: 1

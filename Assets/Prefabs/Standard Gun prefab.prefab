@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2333758303422709221}
   - component: {fileID: -7173291163319830765}
   m_Layer: 0
-  m_Name: WeaponPrefab
+  m_Name: Standard Gun prefab
   m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

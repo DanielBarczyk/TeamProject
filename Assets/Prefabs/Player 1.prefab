@@ -626,7 +626,9 @@ MonoBehaviour:
   weaponPanel: {fileID: 7693581820183662750}
   buttonPrefab: {fileID: 2096935117916174477, guid: c533e826ab71cb347858ca69fdfd882d, type: 3}
   itemPrefab: {fileID: 721200231226472303, guid: 0e39bdd88ed85ca4db013e7f745359c7, type: 3}
-  weaponPrefab: {fileID: 8947116308887434104, guid: fc02115d51d59864f8e9a42a406d3f14, type: 3}
+  standardGunPrefab: {fileID: 8947116308887434104, guid: fc02115d51d59864f8e9a42a406d3f14, type: 3}
+  shotgunPrefab: {fileID: 1194306330201876727, guid: 21d0ebd1e09ffdd4eaacc25fffeab02d, type: 3}
+  sniperPrefab: {fileID: 3285873637311056113, guid: e01a7001df252af48aef550d6efa8ddc, type: 3}
 --- !u!114 &2065350563
 MonoBehaviour:
   m_ObjectHideFlags: 0

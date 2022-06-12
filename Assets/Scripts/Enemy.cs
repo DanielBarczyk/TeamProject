@@ -11,11 +11,17 @@ public class Enemy : MonoBehaviour
     int moveframes;
     float currentx=0;
     float currentz=0;
+    public int movetype=0;
+    public float movementspeed;
 
     // Start is called before the first frame update
     void Start()
     {
         moveframes=0;
+        if(movetype==0)
+            movementspeed=0;
+        else
+            movementspeed=0.01f;
     }
 
     // Update is called once per frame
@@ -26,8 +32,10 @@ public class Enemy : MonoBehaviour
             Debug.Log("hp<=0, destroying\n");
             Destroy(this.gameObject);
         }
-        this.GetComponent<Collider>().transform.Translate(0,0,0.01f);
-        //HorizontalMovement();
+        if(movetype==1)
+            this.GetComponent<Collider>().transform.Translate(0,0,0.01f);
+        if(movetype==2)
+            HorizontalMovement();
     }
 
     void HorizontalMovement()
@@ -39,25 +47,25 @@ public class Enemy : MonoBehaviour
             if(ran<0.25f)
             {
                 print("going left");
-                currentx=0.01f;
+                currentx=movementspeed;
                 currentz=0;
             }
             if(ran>0.25f&&ran<0.5f)
             {
                 print("going right");
-                currentx=-0.01f;
+                currentx=(-1)*movementspeed;
                 currentz=0;
             }
             if(ran>0.5f&&ran<0.75f)
             {
                 print("going forward");
-                currentz=0.01f;
+                currentz=movementspeed;
                 currentx=0;
             }
             if(ran>0.75)
             {
                 print("going down");
-                currentz=-0.01f;
+                currentz=(-1)*movementspeed;
                 currentx=0;
             }
             moveframes=30;

@@ -22,7 +22,7 @@ public class Inventory : MonoBehaviour
         equippedWeapon=new Weapon();
         weaponCount=0;
         AddWeapon(new Weapon());
-        AddWeapon(new Weapon("Strong and Slow",10,420,4.0f));
+        AddWeapon(new Weapon("Shotgun",10,420,4.0f));
         UpdateWeapons();
         itemCount=0;
     }
@@ -38,7 +38,10 @@ public class Inventory : MonoBehaviour
     [SerializeField] Transform weaponPanel;
     [SerializeField] GameObject buttonPrefab;
     [SerializeField] GameObject itemPrefab;
-    [SerializeField] GameObject weaponPrefab;
+    [SerializeField] GameObject standardGunPrefab;
+    [SerializeField] GameObject shotgunPrefab;
+    [SerializeField] GameObject sniperPrefab;
+    
 
     public bool AddWeapon(Weapon weapon){
         if(weaponCount<8)
@@ -63,9 +66,18 @@ public class Inventory : MonoBehaviour
         if(Input.GetKey(KeyCode.LeftShift))
         {
             Destroy(button);
-            GameObject weapondrop = (GameObject)Instantiate(weaponPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
-            weapondrop.name=name;
-            weapondrop.GetComponent<WeaponBehaviour>().weapon=weapon;
+            if(weapon.name=="Standard Gun"||weapon.name=="Starting Weapon"){
+                GameObject weapondrop = (GameObject)Instantiate(standardGunPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
+                weapondrop.GetComponent<WeaponBehaviour>().weapon=weapon;
+            }
+            if(weapon.name=="Shotgun"){
+                GameObject weapondrop = (GameObject)Instantiate(shotgunPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
+                weapondrop.GetComponent<WeaponBehaviour>().weapon=weapon;
+            }
+            if(weapon.name=="Sniper Rifle"){
+                GameObject weapondrop = (GameObject)Instantiate(sniperPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
+                weapondrop.GetComponent<WeaponBehaviour>().weapon=weapon;
+            }
         }
         else
         {

@@ -4,34 +4,38 @@ using UnityEngine;
 
 public class EndlessTerrain : MonoBehaviour
 {
+    const float scale = 5f;
     const float moveThresholdBeforeUpdate = 25;
     const float squareMoveThresholdBeforeUpdate = moveThresholdBeforeUpdate * moveThresholdBeforeUpdate;
+
     public LODInfo[] detailLevels;
-    public static float maxViewDistance = 450;
+    public static float maxViewDistance;
+
     public Transform viewer;
     public static Vector2 viewerPosition;
+
     Vector2 viewerPositionOld;
     static MapGenerator mapGenerator;
     int chunkSize;
     int chunksVisibleInViewDistance;
     public Material mapMaterial;
-    
-    // Start is called before the first frame update
+    public GameObject waterObjectPrefab;
     
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
-    List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
+    static List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
+
     void Start() {
         chunkSize = MapGenerator.mapChunkSize - 1;
+        maxViewDistance = detailLevels[detailLevels.Length - 1].visibleDistanceThreshold;
         chunksVisibleInViewDistance = Mathf.RoundToInt(maxViewDistance / chunkSize);
         mapGenerator = FindObjectOfType<MapGenerator>();
-        maxViewDistance = detailLevels[detailLevels.Length - 1].visibleDistanceThreshold;
 
         UpdateVisibleChunks();
     }
 
     // Update is called once per frame
     void Update() {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / scale;
         if((viewerPositionOld - viewerPosition).sqrMagnitude > squareMoveThresholdBeforeUpdate) {
             viewerPositionOld = viewerPosition;
             UpdateVisibleChunks();
@@ -53,11 +57,8 @@ public class EndlessTerrain : MonoBehaviour
                 
                 if (terrainChunkDictionary.ContainsKey(viewedChunkCoord)) {
                     terrainChunkDictionary[viewedChunkCoord].UpdateTerrainChunk();
-                    if (terrainChunkDictionary[viewedChunkCoord].IsVisible()) {
-                        terrainChunksVisibleLastUpdate.Add(terrainChunkDictionary[viewedChunkCoord]);
-                    }
                 } else {
-                    terrainChunkDictionary.Add(viewedChunkCoord, new TerrainChunk(viewedChunkCoord, chunkSize, detailLevels, transform, mapMaterial));
+                    terrainChunkDictionary.Add(viewedChunkCoord, new TerrainChunk(viewedChunkCoord, chunkSize, detailLevels, transform, mapMaterial, waterObjectPrefab));
                 }
             }
         }
@@ -65,6 +66,7 @@ public class EndlessTerrain : MonoBehaviour
 
     public class TerrainChunk {
         GameObject meshObject;
+        GameObject waterObjectInstance;
         Vector2 position;
         Bounds bounds;
 
@@ -79,10 +81,11 @@ public class EndlessTerrain : MonoBehaviour
         bool mapDataReceived;
         int previousLODIndex = -1;
 
-        public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material) {
+        public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material, GameObject waterObject) {
             this.detailLevels = detailLevels;
             position = coord * size;
             Vector3 positionV3 = new Vector3(position.x, 0, position.y);
+            Vector3 waterLevel = new Vector3(0, 2.5f, 0);
             bounds = new Bounds(position, Vector2.one * size);
 
             meshObject = new GameObject("Terrain Chunk");
@@ -91,8 +94,15 @@ public class EndlessTerrain : MonoBehaviour
             meshCollider = meshObject.AddComponent<MeshCollider>();
 
             meshRenderer.material = material;
-            meshObject.transform.position = positionV3;
+            meshObject.transform.position = positionV3 * scale;
             meshObject.transform.parent = parent;
+            meshObject.transform.localScale = Vector3.one * scale;
+
+            waterObjectInstance = Instantiate(waterObject, (positionV3 + waterLevel) * scale, Quaternion.identity);
+            waterObjectInstance.transform.parent = meshObject.transform;
+            // waterObject.transform.position = positionV3 * scale;
+            // waterObject.transform.localScale = Vector3.one * scale;
+
             SetVisible(false);
 
             lodMeshes = new LODMesh[detailLevels.Length];
@@ -142,6 +152,8 @@ public class EndlessTerrain : MonoBehaviour
                         lodMesh.RequstMesh(mapData);
                     }
                 }
+
+                terrainChunksVisibleLastUpdate.Add(this);
             }
 
             SetVisible(visible);

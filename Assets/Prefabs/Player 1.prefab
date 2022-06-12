@@ -656,13 +656,14 @@ MonoBehaviour:
   inventoryScreen: {fileID: 7693581820727431245}
   currentWeapon: {fileID: 7693581821235153167}
   visible: 0
+  equippedWeapon: {fileID: 0}
   itemPanel: {fileID: 7693581821390289585}
   weaponPanel: {fileID: 7693581820183662750}
   buttonPrefab: {fileID: 2096935117916174477, guid: c533e826ab71cb347858ca69fdfd882d, type: 3}
   itemPrefab: {fileID: 721200231226472303, guid: 0e39bdd88ed85ca4db013e7f745359c7, type: 3}
   standardGunPrefab: {fileID: 8947116308887434104, guid: fc02115d51d59864f8e9a42a406d3f14, type: 3}
   shotgunPrefab: {fileID: 6641149057526928653, guid: 8cc1060b692ee3d4c82e80504f35c5bb, type: 3}
-  sniperPrefab: {fileID: 3285873637311056113, guid: e01a7001df252af48aef550d6efa8ddc, type: 3}
+  sniperPrefab: {fileID: 361071040317242657, guid: 17fbf7c13eb55454ca5842b73b26f230, type: 3}
 --- !u!114 &2065350563
 MonoBehaviour:
   m_ObjectHideFlags: 0

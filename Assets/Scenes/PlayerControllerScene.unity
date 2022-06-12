@@ -2214,10 +2214,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7693581819872791432, guid: ae3f1bca87e3e474396c554e2565cf02, type: 3}
-      propertyPath: sniperPrefab
-      value: 
-      objectReference: {fileID: 361071040317242657, guid: 17fbf7c13eb55454ca5842b73b26f230, type: 3}
     - target: {fileID: 7693581819872791436, guid: ae3f1bca87e3e474396c554e2565cf02, type: 3}
       propertyPath: m_Name
       value: Player

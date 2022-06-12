@@ -16,6 +16,8 @@ public class EndlessTerrain : MonoBehaviour
 
     Vector2 viewerPositionOld;
     static MapGenerator mapGenerator;
+    static EnemyGeneration enemyGeneration;
+    static WeaponGeneration weaponGeneration;
     int chunkSize;
     int chunksVisibleInViewDistance;
     public Material mapMaterial;
@@ -30,7 +32,8 @@ public class EndlessTerrain : MonoBehaviour
         maxViewDistance = detailLevels[detailLevels.Length - 1].visibleDistanceThreshold;
         chunksVisibleInViewDistance = Mathf.RoundToInt(maxViewDistance / chunkSize);
         mapGenerator = FindObjectOfType<MapGenerator>();
-
+        enemyGeneration = FindObjectOfType<EnemyGeneration>();
+        weaponGeneration = FindObjectOfType<WeaponGeneration>();
         UpdateVisibleChunks();
     }
 
@@ -70,6 +73,8 @@ public class EndlessTerrain : MonoBehaviour
         GameObject waterObjectInstance;
         GameObject treeObjectBase;
         List<GameObject> treeObjects;
+        List<GameObject> enemyObjects;
+        List<GameObject> weaponObjects;
         Vector2 position;
         Bounds bounds;
         int size;
@@ -94,6 +99,8 @@ public class EndlessTerrain : MonoBehaviour
             bounds = new Bounds(position, Vector2.one * size);
 
             treeObjects = new List<GameObject>();
+            enemyObjects = new List<GameObject>();
+            weaponObjects = new List<GameObject>();
             treeObjectBase = treeObject;
 
             meshObject = new GameObject("Terrain Chunk");
@@ -126,6 +133,14 @@ public class EndlessTerrain : MonoBehaviour
             Texture2D texture = TextureGenerator.TextureFromColourMap(mapData.colourMap, MapGenerator.mapChunkSize, MapGenerator.mapChunkSize);
             meshRenderer.material.mainTexture = texture;
 
+            populateChunk(treeObjects, treeObjectBase);
+            generateEnemies();
+            generatedWeapons();
+
+            UpdateTerrainChunk();
+        }
+
+        void populateChunk(List<GameObject> objectList, GameObject prefab) {
             Quaternion quaternion = Quaternion.Euler(270, 0, 0);
 
             for (int i = 0; i < 1000; i++) {
@@ -148,8 +163,48 @@ public class EndlessTerrain : MonoBehaviour
                     treeObjects.Add(tree);
                 } 
             }
+        }
 
-            UpdateTerrainChunk();
+        void generateEnemies() {
+            for (int i = 0; i < 100; i++) {
+                int randomX = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                int randomY = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                float height = mapData.heightMap[randomX, randomY];
+                
+                float topLeftX = (MapGenerator.mapChunkSize - 1) / -2f;
+		        float topLeftZ = (MapGenerator.mapChunkSize - 1) / 2f;
+
+                Vector3 randomOffset = new Vector3(topLeftX + randomX, 0, topLeftZ - randomY);
+                
+                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 1;
+                randomOffset.x += position.x;
+                randomOffset.z += position.y;
+                GameObject enemy = enemyGeneration.generateEnemy(randomOffset * scale, Quaternion.identity);
+                enemy.transform.parent = meshObject.transform;
+                enemy.transform.localScale = Vector3.one * scale / 4;
+                enemyObjects.Add(enemy);
+            }
+        }
+
+        void generatedWeapons() {
+            for (int i = 0; i < 40; i++) {
+                int randomX = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                int randomY = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                float height = mapData.heightMap[randomX, randomY];
+                
+                float topLeftX = (MapGenerator.mapChunkSize - 1) / -2f;
+		        float topLeftZ = (MapGenerator.mapChunkSize - 1) / 2f;
+
+                Vector3 randomOffset = new Vector3(topLeftX + randomX, 0, topLeftZ - randomY);
+
+                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 1;
+                randomOffset.x += position.x;
+                randomOffset.z += position.y;
+                GameObject weapon = weaponGeneration.generateWeapon(randomOffset * scale, Quaternion.identity);
+                weapon.transform.parent = meshObject.transform;
+                weapon.transform.localScale = Vector3.one * scale / 5;
+                weaponObjects.Add(weapon);
+            }
         }
 
         public void UpdateTerrainChunk() {

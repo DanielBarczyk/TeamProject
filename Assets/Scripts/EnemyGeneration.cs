@@ -9,26 +9,27 @@ public class EnemyGeneration : MonoBehaviour
     [SerializeField] GameObject stationaryEnemyPrefab;
     [SerializeField] GameObject movingEnemyPrefab;
 
-    public void generateEnemy(Vector3 position, Quaternion rotation)
+    public GameObject generateEnemy(Vector3 position, Quaternion rotation)
     {
-        float ran=UnityEngine.Random.value;
-        if(ran<0.5f)
-            generateStationaryEnemy(position,rotation);
-        else
-            generateMovingEnemy(position,rotation);
+        float ran = UnityEngine.Random.value;
+        if(ran < 0.5f)
+            return generateStationaryEnemy(position,rotation);
+        return generateMovingEnemy(position,rotation);
     }
 
-    void generateStationaryEnemy(Vector3 position, Quaternion rotation)
+    GameObject generateStationaryEnemy(Vector3 position, Quaternion rotation)
     {
         GameObject generatedEnemy=(GameObject)Instantiate(stationaryEnemyPrefab,position,rotation);
         randomizeEnemyStats(generatedEnemy,1);
         generatedEnemy.GetComponent<Enemy>().movementspeed=0;
+        return generatedEnemy;
     }
 
-    void generateMovingEnemy(Vector3 position, Quaternion rotation)
+    GameObject generateMovingEnemy(Vector3 position, Quaternion rotation)
     {
         GameObject generatedEnemy=(GameObject)Instantiate(movingEnemyPrefab,position,rotation);
         randomizeEnemyStats(generatedEnemy,1);
+        return generatedEnemy;
     }
 
     void randomizeEnemyStats(GameObject generatedEnemy, int modifier)

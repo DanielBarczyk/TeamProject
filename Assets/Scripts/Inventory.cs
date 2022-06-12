@@ -78,6 +78,7 @@ public class Inventory : MonoBehaviour
                 GameObject weapondrop = (GameObject)Instantiate(sniperPrefab,this.gameObject.GetComponent<Transform>().position+transform.forward*2,this.gameObject.GetComponent<Transform>().rotation);
                 weapondrop.GetComponent<WeaponBehaviour>().weapon=weapon;
             }
+            itemCount--;
         }
         else
         {

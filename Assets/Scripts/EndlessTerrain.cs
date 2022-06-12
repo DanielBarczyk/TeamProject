@@ -20,6 +20,7 @@ public class EndlessTerrain : MonoBehaviour
     int chunksVisibleInViewDistance;
     public Material mapMaterial;
     public GameObject waterObjectPrefab;
+    public GameObject treeObjectPrefab;
     
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
     static List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
@@ -58,7 +59,7 @@ public class EndlessTerrain : MonoBehaviour
                 if (terrainChunkDictionary.ContainsKey(viewedChunkCoord)) {
                     terrainChunkDictionary[viewedChunkCoord].UpdateTerrainChunk();
                 } else {
-                    terrainChunkDictionary.Add(viewedChunkCoord, new TerrainChunk(viewedChunkCoord, chunkSize, detailLevels, transform, mapMaterial, waterObjectPrefab));
+                    terrainChunkDictionary.Add(viewedChunkCoord, new TerrainChunk(viewedChunkCoord, chunkSize, detailLevels, transform, mapMaterial, waterObjectPrefab, treeObjectPrefab));
                 }
             }
         }
@@ -67,8 +68,11 @@ public class EndlessTerrain : MonoBehaviour
     public class TerrainChunk {
         GameObject meshObject;
         GameObject waterObjectInstance;
+        GameObject treeObjectBase;
+        List<GameObject> treeObjects;
         Vector2 position;
         Bounds bounds;
+        int size;
 
         MeshRenderer meshRenderer;
         MeshFilter meshFilter;
@@ -81,12 +85,16 @@ public class EndlessTerrain : MonoBehaviour
         bool mapDataReceived;
         int previousLODIndex = -1;
 
-        public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material, GameObject waterObject) {
+        public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material, GameObject waterObject, GameObject treeObject) {
             this.detailLevels = detailLevels;
+            this.size = size;
             position = coord * size;
             Vector3 positionV3 = new Vector3(position.x, 0, position.y);
-            Vector3 waterLevel = new Vector3(0, 2.5f, 0);
+            Vector3 waterLevel = new Vector3(0, 0.5f, 0);
             bounds = new Bounds(position, Vector2.one * size);
+
+            treeObjects = new List<GameObject>();
+            treeObjectBase = treeObject;
 
             meshObject = new GameObject("Terrain Chunk");
             meshRenderer = meshObject.AddComponent<MeshRenderer>();
@@ -100,8 +108,6 @@ public class EndlessTerrain : MonoBehaviour
 
             waterObjectInstance = Instantiate(waterObject, (positionV3 + waterLevel) * scale, Quaternion.identity);
             waterObjectInstance.transform.parent = meshObject.transform;
-            // waterObject.transform.position = positionV3 * scale;
-            // waterObject.transform.localScale = Vector3.one * scale;
 
             SetVisible(false);
 
@@ -119,6 +125,29 @@ public class EndlessTerrain : MonoBehaviour
 
             Texture2D texture = TextureGenerator.TextureFromColourMap(mapData.colourMap, MapGenerator.mapChunkSize, MapGenerator.mapChunkSize);
             meshRenderer.material.mainTexture = texture;
+
+            Quaternion quaternion = Quaternion.Euler(270, 0, 0);
+
+            for (int i = 0; i < 1000; i++) {
+                int randomX = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                int randomY = (int) Mathf.Floor(Random.Range(0, MapGenerator.mapChunkSize));
+                float height = mapData.heightMap[randomX, randomY];
+                
+                float topLeftX = (MapGenerator.mapChunkSize - 1) / -2f;
+		        float topLeftZ = (MapGenerator.mapChunkSize - 1) / 2f;
+
+                Vector3 randomOffset = new Vector3(topLeftX + randomX, 0, topLeftZ - randomY);
+
+                if (height > 0.5 && height < 0.8) {
+                    randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier;
+                    randomOffset.x += position.x;
+                    randomOffset.z += position.y;
+                    GameObject tree = Instantiate(treeObjectBase, randomOffset * scale, quaternion);
+                    tree.transform.parent = meshObject.transform;
+                    tree.transform.localScale = Vector3.one * scale / 3;
+                    treeObjects.Add(tree);
+                } 
+            }
 
             UpdateTerrainChunk();
         }

@@ -65,6 +65,17 @@ public class PlayerShoot : MonoBehaviour
                         PickUp.SetActive(false);
                     }
                 }
+
+                if(looking_at.tag=="Health Pickup")
+                {
+                    PickUp.SetActive(true);
+                    if(Input.GetKeyDown("e"))
+                    {
+                        looking_at.GetComponent<HealthPickupBehaviour>().Collect(this.gameObject.GetComponentInParent<Inventory>());
+                        PickUp.SetActive(false);
+                    }
+                }
+
                 if(looking_at.tag=="Weapon")
                 {
                     PickUp.SetActive(true);

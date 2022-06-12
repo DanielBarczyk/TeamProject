@@ -41,6 +41,14 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    public void heal(int amount)
+    {
+        currentHealth+=amount;
+        if(currentHealth>maxHealth)
+            currentHealth=maxHealth;
+        UpdateHealthText();
+    }
+
     void die()
     {
         gameOverText.SetActive(true);

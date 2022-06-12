@@ -109,5 +109,9 @@ public class Inventory : MonoBehaviour
             item.name=name;
         }
     }
+    public void Heal(int hp)
+    {
+        this.gameObject.GetComponent<PlayerHealth>().heal(hp);
+    }
 
 }

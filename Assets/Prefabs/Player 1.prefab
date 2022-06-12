@@ -633,7 +633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 7693581819872791435}
-  movementSpeed: 5
+  movementSpeed: 40
   jumpHeight: 3
   gravity: -19.62
   groundCheck: {fileID: 7693581819864715869}
@@ -656,6 +656,7 @@ MonoBehaviour:
   inventoryScreen: {fileID: 7693581820727431245}
   currentWeapon: {fileID: 7693581821235153167}
   visible: 0
+  equippedWeapon: {fileID: 0}
   itemPanel: {fileID: 7693581821390289585}
   weaponPanel: {fileID: 7693581820183662750}
   buttonPrefab: {fileID: 2096935117916174477, guid: c533e826ab71cb347858ca69fdfd882d, type: 3}

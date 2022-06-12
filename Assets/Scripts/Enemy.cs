@@ -46,25 +46,21 @@ public class Enemy : MonoBehaviour
             float ran=UnityEngine.Random.value;
             if(ran<0.25f)
             {
-                print("going left");
                 currentx=movementspeed;
                 currentz=0;
             }
             if(ran>0.25f&&ran<0.5f)
             {
-                print("going right");
                 currentx=(-1)*movementspeed;
                 currentz=0;
             }
             if(ran>0.5f&&ran<0.75f)
             {
-                print("going forward");
                 currentz=movementspeed;
                 currentx=0;
             }
             if(ran>0.75)
             {
-                print("going down");
                 currentz=(-1)*movementspeed;
                 currentx=0;
             }

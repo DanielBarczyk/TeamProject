@@ -8,27 +8,17 @@ public class Enemy : MonoBehaviour
     public int hp=2;
     public int defense=0;
     public int atk=20;
-    int moveframes;
     float currentx=0;
     float currentz=0;
     public int movetype=0;
     public float movementspeed;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        moveframes=0;
-        if(movetype==0)
-            movementspeed=0;
-        else
-            movementspeed=0.01f;
-    }
 
     // Update is called once per frame
     void Update()
     {
         if(hp<=0)
         {
+            EndlessTerrain.weaponGeneration.generateWeapon(this.transform.position, Quaternion.identity);
             Debug.Log("hp<=0, destroying\n");
             Destroy(this.gameObject);
         }
@@ -40,38 +30,28 @@ public class Enemy : MonoBehaviour
 
     void HorizontalMovement()
     {
-        if(moveframes==0)
+        float ran=UnityEngine.Random.value;
+        if(ran<0.25f)
         {
-            
-            float ran=UnityEngine.Random.value;
-            if(ran<0.25f)
-            {
-                print("going left");
-                currentx=movementspeed;
-                currentz=0;
-            }
-            if(ran>0.25f&&ran<0.5f)
-            {
-                print("going right");
-                currentx=(-1)*movementspeed;
-                currentz=0;
-            }
-            if(ran>0.5f&&ran<0.75f)
-            {
-                print("going forward");
-                currentz=movementspeed;
-                currentx=0;
-            }
-            if(ran>0.75)
-            {
-                print("going down");
-                currentz=(-1)*movementspeed;
-                currentx=0;
-            }
-            moveframes=30;
+            currentx=movementspeed;
+            currentz=0;
         }
-        this.GetComponent<Collider>().transform.Translate(currentx,0,currentz);
-        moveframes--;
+        if(ran>0.25f&&ran<0.5f)
+        {
+            currentx=(-1)*movementspeed;
+            currentz=0;
+        }
+        if(ran>0.5f&&ran<0.75f)
+        {
+            currentz=movementspeed;
+            currentx=0;
+        }
+        if(ran>0.75)
+        {
+            currentz=(-1)*movementspeed;
+            currentx=0;
+        }
+        this.GetComponent<Collider>().transform.Translate(currentx * Time.deltaTime, 0, currentz * Time.deltaTime);
     }
     
     public void ShootAt(int damage)

@@ -184,12 +184,12 @@ public class EndlessTerrain : MonoBehaviour
 
                 Vector3 randomOffset = new Vector3(topLeftX + randomX, 0, topLeftZ - randomY);
                 
-                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 5;
+                randomOffset.y = mapGenerator.meshHeightCurve.Evaluate(height) * mapGenerator.meshHeightMultiplier + 10;
                 randomOffset.x += position.x;
                 randomOffset.z += position.y;
-                GameObject enemy = enemyGeneration.generateEnemy(randomOffset * scale, Quaternion.identity);
+                GameObject enemy = enemyGeneration.generateEnemy(randomOffset * scale, Quaternion.Euler(270, 0, 0));
                 enemy.transform.parent = emptyObject.transform;
-                enemy.transform.localScale = Vector3.one * scale / 4;
+                enemy.transform.localScale = Vector3.one * scale / 8;
                 enemyObjects.Add(enemy);
             }
         }

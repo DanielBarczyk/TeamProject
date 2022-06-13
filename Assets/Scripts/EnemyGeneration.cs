@@ -44,6 +44,6 @@ public class EnemyGeneration : MonoBehaviour
         generatedEnemy.GetComponent<Enemy>().atk = Mathf.FloorToInt(ran);
 
         ran = UnityEngine.Random.value * 0.5f;
-        generatedEnemy.GetComponent<Enemy>().movementspeed = Mathf.FloorToInt(ran * 3);
+        generatedEnemy.GetComponent<Enemy>().movementspeed = Mathf.FloorToInt(ran);
     }
 }
